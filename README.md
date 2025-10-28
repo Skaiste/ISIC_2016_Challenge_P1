@@ -70,5 +70,5 @@ The model is trained for 10 epochs and saves the best performing model based on 
 
 ## References
 
-Gutman, David; Codella, Noel C. F.; Celebi, Emre; Helba, Brian; Marchetti, Michael; Mishra, Nabin; Halpern, Allan. "Skin Lesion Analysis toward Melanoma Detection: A Challenge at the International Symposium on Biomedical Imaging (ISBI) 2016, hosted by the International Skin Imaging Collaboration (ISIC)". arXiv preprint arXiv:1605.01397. 2016.
+D. A. Gutman et al., "Skin Lesion Analysis toward Melanoma Detection: A Challenge at the International Symposium on Biomedical Imaging (ISBI) 2016, hosted by the International Skin Imaging Collaboration (ISIC)," CoRR, vol. abs/1605.01397, 2016. [Online]. Available: http://arxiv.org/abs/1605.01397
 
