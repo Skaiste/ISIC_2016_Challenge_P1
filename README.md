@@ -63,10 +63,9 @@ The model is trained for 10 epochs and saves the best performing model based on 
 
 ## Files
 
-- `baseline.ipynb`: Jupyter notebook containing the complete implementation, training, and evaluation pipeline
+- `baseline.ipynb`: Jupyter notebook containing the complete implementation, training, and evaluation pipeline for a baseline model - UNet
+- `improved.ipynb`: (TO BE CREATED) Jupyter notebook containting the complete implementation, training, and evaluation pipeline for an improved model
 - `dataset.py`: Custom PyTorch dataset class for loading and preprocessing the segmentation data
-- `best_segmentation_model.pth`: Trained model weights (best validation performance)
-- `README.md`: This file
 
 
 ## References
