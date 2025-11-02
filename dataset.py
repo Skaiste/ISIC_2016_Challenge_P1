@@ -4,9 +4,11 @@ from PIL import Image
 import torch
 from torch.utils.data import random_split
 from torch.utils.data import DataLoader
+import random
+import torchvision.transforms.functional as TF
 
 class SegmentationDataset(Dataset):
-    def __init__(self, images_dir, masks_dir, image_transform=None, mask_transform=None):
+    def __init__(self, images_dir, masks_dir, joint_transform=None, image_transform=None, mask_transform=None):
         """
         Custom dataset for image segmentation.
         
@@ -18,6 +20,7 @@ class SegmentationDataset(Dataset):
         """
         self.images_dir = pathlib.Path(images_dir)
         self.masks_dir = pathlib.Path(masks_dir)
+        self.joint_transform = joint_transform
         self.image_transform = image_transform
         self.mask_transform = mask_transform
         
@@ -44,6 +47,8 @@ class SegmentationDataset(Dataset):
         mask = Image.open(mask_path).convert('L')  # Load as grayscale
         
         # Apply transforms
+        if self.joint_transform:
+            image, mask = self.joint_transform(image, mask)
         if self.image_transform:
             image = self.image_transform(image)
         if self.mask_transform:
@@ -102,3 +107,54 @@ def get_dataloaders(dataset, batch_size=8, shuffle=True, num_workers=0, t_size=0
         return train_loader, val_loader, eval_loader
     else:
         return train_loader, val_loader
+
+
+class DualCompose:
+    """Compose transforms that operate on (image, mask)."""
+    def __init__(self, transforms_list):
+        self.transforms = transforms_list
+    
+    def __call__(self, image, mask):
+        for t in self.transforms:
+            if hasattr(t, "get_param"):
+                param = t.get_param()
+                image, mask = t(image, mask, param)
+            else:
+                image, mask = t(image, mask)
+        return image, mask
+
+class DualResize:
+    """Resize image and mask with appropriate interpolation for each."""
+    def __init__(self, size):
+        self.size = size
+    
+    def __call__(self, image, mask):
+        image_resized = TF.resize(image, self.size)
+        mask_resized = TF.resize(mask, self.size, interpolation=Image.NEAREST)
+        return image_resized, mask_resized
+
+class RandomRotationDual:
+    def __init__(self, degrees):
+        self.degrees = degrees
+
+    def get_param(self):
+        return random.uniform(-self.degrees, self.degrees)
+    
+    def __call__(self, image, mask, angle):
+        return TF.rotate(image, angle), TF.rotate(mask, angle)
+
+class RandomFlipDual:
+    def __init__(self, flip_type, p=0.5):
+        self.p = p
+        self.flip_type = flip_type
+    
+    def get_param(self):
+        return random.random() < self.p
+        
+    def __call__(self, image, mask, is_flipped):
+        if is_flipped:
+            if self.flip_type == "horizontal":
+                return TF.hflip(image), TF.hflip(mask)
+            elif self.flip_type == "vertical":
+                return TF.vflip(image), TF.vflip(mask)
+        return image, mask
