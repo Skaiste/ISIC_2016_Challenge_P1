@@ -73,6 +73,48 @@ The baseline model is a **U-Net architecture** designed for binary semantic segm
 The model architecture and training has been adjusted in stages.
 
 ### Stage 1:
+- **Image & Mask Processing**: increased the size of the images to 512x512px
+
+#### Training Results
+Trained for 8 epochs
+|  | Sensitivity | Specificity | Accuracy | IoU | Dice |
+|--|--|--|--|--|--|
+| Validation |  |  | 0.9402 | 0.7948 | 0.8763 |
+| Evaluation | 0.9289 | 0.9739 | 0.9723 | 0.8727 | 0.9315 |
+
+Final Results:
+  Total epochs trained: 8
+  Best validation metrics:
+    IoU: 0.6970
+    Dice: 0.7990
+    Accuracy: 0.9026
+    Loss: 0.2452
+Calculating metrics for each prediction:
+Average Metrics:
+  Sensitivity: 0.7411
+  Specificity: 0.9999
+  Accuracy: 0.9123
+  IoU: 0.7400
+  Dice: 0.8337
+  Hausdorff: 57.9398
+
+### Stage 2
+- Added **Convergence** with patience of 5 with maximum of 50 **epochs**
+- **Image & Mask Processing**: added random rotation and flipping both vertically and horizontally
+
+#### Training Results
+Trained for 8 epochs
+|  | Sensitivity | Specificity | Accuracy | IoU | Dice |
+|--|--|--|--|--|--|
+| Validation |  |  | 0.9402 | 0.7948 | 0.8763 |
+| Evaluation | 0.9289 | 0.9739 | 0.9723 | 0.8727 | 0.9315 |
+
+
+
+
+## Old improvements
+
+### Stage 1:
 
 #### Training configuration additions
 - Added **Convergence** with patience of 5 with maximum of 50 **epochs**
